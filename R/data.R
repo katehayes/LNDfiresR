@@ -1,3 +1,37 @@
+library(tidyverse)
+library(readxl)
+library(lubridate)
+# https://data.london.gov.uk/dataset/london-fire-brigade-incident-records?resource=f5066d66-c7a3-415f-9629-026fbda61822
+# dataset updated 25 days ago as of 15th Oct 24
+
+temp1 <- tempfile()
+temp2 <- tempfile()
+
+# options(timeout = 1000) # download kept timing out when limit was at 60 second default
+download.file("https://data.london.gov.uk/download/london-fire-brigade-incident-records/73728cf4-b70e-48e2-9b97-4e4341a2110d/LFB%20Incident%20data%20from%202009%20-%202017.csv", temp1)
+download.file("https://data.london.gov.uk/download/london-fire-brigade-incident-records/f5066d66-c7a3-415f-9629-026fbda61822/LFB%20Incident%20data%20from%202018%20onwards.csv.xlsx", temp2)
+
+
+
+f_data <- read_csv(temp1) %>% 
+  mutate(DateOfCall = dmy(DateOfCall),
+         TimeOfCall = format(as.POSIXct(TimeOfCall), format = "%H:%M:%S"),
+         UPRN = as.double(UPRN),
+         USRN = as.double(USRN),
+         NumCalls = as.double(NumCalls)) %>% 
+  bind_rows(read_xlsx(temp2) %>% 
+              mutate(TimeOfCall = format(as.POSIXct(TimeOfCall), format = "%H:%M:%S")))
+
+f_data <- check 
+
+cat <- check %>% 
+  filter(PropertyCategory %in% c("Other Residential")) %>% 
+  distinct(PropertyType)
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
 f_data <- read.csv("/Users/katehayes/Library/CloudStorage/GoogleDrive-khayes2@sheffield.ac.uk/My Drive/THdata/LFB Incident data with notional cost and UPRN from January 2009.csv")
 
 col_name <- read_xlsx("/Users/katehayes/Library/CloudStorage/GoogleDrive-khayes2@sheffield.ac.uk/My Drive/THdata/Metadata.xlsx") %>% 
