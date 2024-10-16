@@ -2,19 +2,24 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-# cat <- raw_fires_09to17 %>% 
-#   distinct(PropertyCategory, PropertyType)
+ # cat <- raw_fires_09to17 %>% 
+ #  distinct(PropertyCategory, PropertyType)
+ 
+ cat <- f_data_1 %>% 
+   distinct(PropertyCategory, PropertyType)
 
 # check <- raw_fires_09to17 %>% 
 #   distinct(IncGeo_WardName, IncGeo_WardNameNew) %>% 
 #   mutate(change = ifelse(IncGeo_WardName == IncGeo_WardNameNew, "fine", "change!"))
 
-hmo_unlicensed <- c("Unlicensed House in Multiple Occupation - Up to 2 storeys ",
-                    "Unlicensed House in Multiple Occupation - 3 or more storeys ")
-hmo_licensed <- c("Licensed House in Multiple Occupation - Up to 2 storeys ",
-                  "Licensed House in Multiple Occupation - 3 or more storeys ")
-hmo_unknown <- c("House in Multiple Occupation - 3 or more storeys (not known if licensed) ",
-                 "House in Multiple Occupation - Up to 2 storeys (not known if licensed) ")
+hmo_unlicensed <- c("Unlicensed House in Multiple Occupation - Up to 2 storeys",
+                    "Unlicensed House in Multiple Occupation - 3 or more storeys")
+hmo_licensed <- c("Licensed House in Multiple Occupation - Up to 2 storeys",
+                  "Licensed House in Multiple Occupation - 3 or more storeys")
+hmo_unknown <- c("House in Multiple Occupation - 3 or more storeys (not known if licensed)",
+                 "House in Multiple Occupation - Up to 2 storeys (not known if licensed)")
+
+
 
 # borough_list <- c("TOWER HAMLETS", "HACKNEY", "ISLINGTON", 
 #                   "HARINGEY", "WALTHAM FOREST", "NEWHAM")
