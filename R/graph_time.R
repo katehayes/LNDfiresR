@@ -1,7 +1,7 @@
 library(zoo)
 library(scales)
-
-
+library(usethis)
+# use_readme_md()
 
 plot_hmo_pc_time <- fires %>% 
   mutate(month_yr = as.yearmon(date, "%Y %m")) %>% 

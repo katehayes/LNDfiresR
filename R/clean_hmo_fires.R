@@ -40,13 +40,13 @@ ldn_borough_codes <- raw_fires_09to17 %>%
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-fires <- f_data_1 %>% 
-  # mutate(DateOfCall = dmy(DateOfCall),
-  #        TimeOfCall = format(as.POSIXct(TimeOfCall), format = "%H:%M:%S"),
-  #        UPRN = as.double(UPRN),
-  #        USRN = as.double(USRN),
-  #        NumCalls = as.double(NumCalls)) %>% 
-  bind_rows(f_data %>% 
+fires <- raw_fires_09to17 %>% 
+  mutate(DateOfCall = dmy(DateOfCall),
+         TimeOfCall = format(as.POSIXct(TimeOfCall), format = "%H:%M:%S"),
+         UPRN = as.double(UPRN),
+         USRN = as.double(USRN),
+         NumCalls = as.double(NumCalls)) %>%
+  bind_rows(raw_fires_18to24 %>% 
               mutate(TimeOfCall = format(as.POSIXct(TimeOfCall), format = "%H:%M:%S"))) %>% 
   filter(IncidentGroup == "Fire",
          PropertyCategory %in% c("Dwelling")) %>%  #,  "Other Residential"
@@ -65,6 +65,10 @@ fires <- f_data_1 %>%
          northing_rounded = Northing_rounded) %>% 
   select(date, borough, ward, easting_rounded, northing_rounded, hmo_bin, hmo_license, property_type)
 # filter(borough %in% borough_list)
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
 
 hmo <- raw_hmo %>% 
