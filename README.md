@@ -1,5 +1,5 @@
 # LDNfiresR
-**Context:** after a fire in an overcrowded, unlicensed HMO in Shadwell, a local residents' group are preparing to speak to Tower Hamlets council about fire safety in rental properties. They want to look at trends in fire data w.r.t. time, location (borough or ward etc.), dwelling type (HMO vs. single occupancy), HMO license type (licensed vs. unlicensed).
+**Context:** after a fire in an overcrowded, unlicensed HMO in Shadwell, a local residents' group are preparing to speak to Tower Hamlets council about fire safety in rental properties. They would like to get a sense of patterns in the occurrence of fires in London w.r.t. time, place (borough or ward etc.), dwelling type (e.g. HMO vs. single occupancy), HMO license type (licensed vs. unlicensed). This is a v quick look at the data for them. 
 <br><br>
 **Fire data**
 <br>
@@ -12,7 +12,7 @@ The ONS released this dataset, derived from 2021 Census data - contains LA-level
 Doesn't seem like there are many (any?) consistent time-series available that track HMO numbers/ number of households in HMOs? To-do: explore LA housing statistics - some HMO data maybe present in the 2020/2021 returns (https://www.gov.uk/government/statistical-data-sets/local-authority-housing-statistics-data-returns-for-2020-to-2021) - here also is LA housing open data (https://www.gov.uk/government/statistical-data-sets/local-authority-housing-statistics-open-data).
 <br><br>
 **Plots**<br>
-Fires in licensed HMOs look like they're becoming more frequent over time, while fires in unlicensed HMOs (& HMOs with unknown license status) happen less. Dwelling fires in London are, overall, becoming less frequent and so fires in licensed HMOs are making up a growing proportion of total fires. <br>
+Fires in licensed HMOs look like they're becoming more frequent over time, while fires in unlicensed HMOs (& HMOs with unknown license status) happen less. Dwelling fires in London are, overall, becoming less frequent and so fires in licensed HMOs are making up a growing proportion of total fires. Not sure what is happening to the number of HMOs in London over the same time period.<br>
 ![plot_hmo_count_time](https://github.com/katehayes/LNDfiresR/blob/main/plots/plot_hmo_count_time.png)
 <br>
 ![plot_hmo_pc_time](https://github.com/katehayes/LNDfiresR/blob/main/plots/plot_hmo_pc_time.png)
