@@ -7,4 +7,4 @@ library(jsonlite)
 
 download.file("https://s3.eu-west-1.amazonaws.com/statistics.digitalresources.jisc.ac.uk/dkan/files/2021/ONS/number-of-households-that-are-in-HMO/by-accomodation-type/RM193-Number-Of-Households-In-Houses-In-Multiple-Occupation-(Hmo)-By-Accommodation-Type-2021-ltla-ONS.xlsx", temp1)
 
-hmo_data <- read_xlsx(temp1)
+raw_hmo <- read_xlsx(temp1)
