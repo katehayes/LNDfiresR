@@ -35,4 +35,4 @@ Every fire in a HMO in Tower Hamlets (years 2009-2023) by ward, HMO license, HMO
 <br>
 ![plot_hmofires_space](https://github.com/katehayes/LNDfiresR/blob/main/plots/plot_hmofires_space.png)
 <br>
-
+<img src="https://github.com/katehayes/LNDfiresR/blob/main/plots/plot_hmofires_space.png" width="200" height="200"/>
