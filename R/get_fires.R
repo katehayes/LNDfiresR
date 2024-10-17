@@ -14,3 +14,5 @@ download.file("https://data.london.gov.uk/download/london-fire-brigade-incident-
 raw_fires_09to17 <- read_csv(temp1)
 raw_fires_18to24 <- read_xlsx(temp2)
 
+# save(raw_fires_09to17, file = "data/raw/raw_fires_09to17.RData")
+# save(raw_fires_18to24, file = "data/raw/raw_fires_18to24.RData")

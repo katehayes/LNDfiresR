@@ -1,12 +1,7 @@
 library(sf)
-
-# w22_shape <- st_read("/Users/katehayes/Library/CloudStorage/GoogleDrive-khayes2@sheffield.ac.uk/My Drive/CL_drive_data/Wards_December_2022_Boundaries_UK_BFC_-3416072881830331872 (1)/WD_DEC_2022_UK_BFC.shp")
-# https://www.data.gov.uk/dataset/b6b33be9-01ab-4720-a43e-8992ce2a84e6/wards-december-2022-boundaries-uk-bfc
-temp1 <- tempfile()
-download.file("https://open-geography-portalx-ons.hub.arcgis.com/api/download/v1/items/a2c204fedefe4120ac93f062c647bdcb/csv?layers=0", temp1)
-w22_shape <- read_csv(temp1)
-
-
+# https://geoportal.statistics.gov.uk/
+  
+w22_shape <- read_sf("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_December_2022_Boundaries_UK_BFC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson")
 
 
 # lsoa2ward <- read_xlsx("/Users/katehayes/Library/CloudStorage/GoogleDrive-khayes2@sheffield.ac.uk/My Drive/THdata/LSOA11_WD21_LAD21_EW_LU_V2.xlsx")
