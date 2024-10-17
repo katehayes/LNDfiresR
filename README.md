@@ -24,8 +24,10 @@ Fires in licensed HMOs look like they're becoming more frequent over time, while
 Dwelling fires in Tower Hamlets are (unsurprisingly) only a fraction of London's dwelling fires - though the fraction is growing, as fire frequency in the rest of London falls faster than in TH.<br>
 ![plot_fires_th_time](https://github.com/katehayes/LNDfiresR/blob/main/plots/plot_fires_th_time.png)
 <br>
+<!---
 Every fire in a HMO in Tower Hamlets (years 2009-2023) by ward, HMO license, HMO size.<br>
 ![plot_fires_th_time](https://github.com/katehayes/LNDfiresR/blob/main/plots/plot_hmofires_THwards.png)
+-->
 <br>
 ![plot_fires_space](https://github.com/katehayes/LNDfiresR/blob/main/plots/plot_fires_space.png)
 <br>
