@@ -11,6 +11,10 @@ The ONS released this dataset, derived from 2021 Census data - contains LA-level
 <br>
 Doesn't seem like there are many (any?) consistent time-series available that track HMO numbers/ number of households in HMOs? To-do: explore LA housing statistics - some HMO data maybe present in the 2020/2021 returns (https://www.gov.uk/government/statistical-data-sets/local-authority-housing-statistics-data-returns-for-2020-to-2021) - here also is LA housing open data (https://www.gov.uk/government/statistical-data-sets/local-authority-housing-statistics-open-data).
 <br><br>
+**Boundaries etc**
+<br>
+The ONS Open Geography Portal (https://geoportal.statistics.gov.uk/)
+<br><br>
 **Plots**<br>
 Fires in licensed HMOs look like they're becoming more frequent over time, while fires in unlicensed HMOs (& HMOs with unknown license status) happen less. Dwelling fires in London are, overall, becoming less frequent and so fires in licensed HMOs are making up a growing proportion of total fires. Not sure what is happening to the number of HMOs in London over the same time period.<br>
 ![plot_hmo_count_time](https://github.com/katehayes/LNDfiresR/blob/main/plots/plot_hmo_count_time.png)
@@ -22,3 +26,7 @@ Dwelling fires in Tower Hamlets are (unsurprisingly) only a fraction of London's
 <br>
 Every fire in a HMO in Tower Hamlets (years 2009-2023) by ward, HMO license, HMO size.<br>
 ![plot_fires_th_time](https://github.com/katehayes/LNDfiresR/blob/main/plots/plot_hmofires_THwards.png)
+<br>
+![plot_fires_space](https://github.com/katehayes/LNDfiresR/blob/main/plots/plot_fires_space.png)
+<br>
+![plot_hmofires_space](https://github.com/katehayes/LNDfiresR/blob/main/plots/plot_hmofires_space.png)
