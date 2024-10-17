@@ -1,6 +1,7 @@
 # LDNfiresR
 **Context:** after a fire in an overcrowded, unlicensed HMO in Shadwell, a local residents' group are preparing to speak to Tower Hamlets council about fire safety in rental properties. They would like to get a sense of patterns in the occurrence of fires in London w.r.t. time, place (borough or ward etc.), dwelling type (e.g. HMO vs. single occupancy), HMO license type (licensed vs. unlicensed). This is a v quick look at the data for them. 
 <br><br>
+## Data sources
 **Fire data**
 <br>
 London Fire Brigade Incident Records (https://data.london.gov.uk/dataset/london-fire-brigade-incident-records). Data available in two chunks, 2009-2017 and 2018-onwards (minor inconsistencies between them; see the cleaning script). Data is incident-level - information available re whether the property is a HMO and so on. 
@@ -15,7 +16,7 @@ Doesn't seem like there are many (any?) consistent time-series available that tr
 <br>
 The ONS Open Geography Portal (https://geoportal.statistics.gov.uk/)
 <br><br>
-**Plots**<br>
+## Plots
 Fires in licensed HMOs look like they're becoming more frequent over time, while fires in unlicensed HMOs (& HMOs with unknown license status) happen less. Dwelling fires in London are, overall, becoming less frequent and so fires in licensed HMOs are making up a growing proportion of total fires. Not sure what is happening to the number of HMOs in London over the same time period.<br>
 ![plot_hmo_count_time](https://github.com/katehayes/LNDfiresR/blob/main/plots/plot_hmo_count_time.png)
 <br>
@@ -30,5 +31,9 @@ Every fire in a HMO in Tower Hamlets (years 2009-2023) by ward, HMO license, HMO
 -->
 ![plot_fires_space](https://github.com/katehayes/LNDfiresR/blob/main/plots/plot_fires_space.png)
 <br>
+![plot_hmos_space](https://github.com/katehayes/LNDfiresR/blob/main/plots/plot_hmos_space.png)
+<br>
 ![plot_hmofires_space](https://github.com/katehayes/LNDfiresR/blob/main/plots/plot_hmofires_space.png)
-
+<br>
+![plot_pc_hmofires_space](https://github.com/katehayes/LNDfiresR/blob/main/plots/plot_pc_hmofires_space.png)
+<br>
