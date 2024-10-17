@@ -1,12 +1,12 @@
+load("data/raw/raw_fires_09to17.RData")
+load("data/raw/raw_fires_18to24.RData")
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
  # cat <- raw_fires_09to17 %>% 
  #  distinct(PropertyCategory, PropertyType)
- 
- cat <- f_data_1 %>% 
-   distinct(PropertyCategory, PropertyType)
 
 # check <- raw_fires_09to17 %>% 
 #   distinct(IncGeo_WardName, IncGeo_WardNameNew) %>% 
@@ -56,14 +56,14 @@ fires <- raw_fires_09to17 %>%
          hmo_license = ifelse(PropertyType %in% hmo_unlicensed, "HMO - unlicensed", hmo_license),
          hmo_license = ifelse(PropertyType %in% hmo_licensed, "HMO - licensed", hmo_license),
          hmo_license = ifelse(PropertyType %in% hmo_unknown, "HMO - unknown", hmo_license)) %>% 
-  mutate(hmo_bin = ifelse(hmo_license == "Other dwelling", hmo_license, "HMO")) %>% 
+  mutate(hmo_yn = ifelse(hmo_license == "Other dwelling", hmo_license, "HMO")) %>% 
   rename(date = DateOfCall,
          property_type = PropertyType,
-         borough = IncGeo_BoroughName,
-         ward = IncGeo_WardNameNew,
+         borough = IncGeo_BoroughCode,
+         ward = IncGeo_WardCode,
          easting_rounded = Easting_rounded,
          northing_rounded = Northing_rounded) %>% 
-  select(date, borough, ward, easting_rounded, northing_rounded, hmo_bin, hmo_license, property_type)
+  select(date, borough, ward, easting_rounded, northing_rounded, hmo_yn, hmo_license, property_type)
 # filter(borough %in% borough_list)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -79,46 +79,37 @@ hmo <- raw_hmo %>%
          count = Observation)  %>% 
   select(c(la, hmo_size, property_type, count))
 
-# %>% 
-  # group_by(la) %>% 
-  # mutate(pc = count/sum(count))
-
-
-fires_shape <- fires
-  left_join(w22_shape %>% 
-              select(WD22CD, geometry) %>% 
-              rename(ward = WD22CD)) %>% 
-  st_as_sf() %>% 
-  st_transform(crs = 4326)
-
-
-fires_hmo <- fires %>% 
-  select(CalYear, IncGeo_BoroughCode, IncGeo_WardCode, my_cat_sum) %>% 
-  mutate(count = 1) %>% 
-  filter(CalYear %in% c(2020:2022)) %>% 
-  group_by(IncGeo_BoroughCode, IncGeo_WardCode, my_cat_sum) %>% 
-  summarise(count = sum(count)) %>% 
-  ungroup() %>% 
-  pivot_wider(names_from = my_cat_sum,
-              values_from = count,
-              values_fill = 0) %>% 
-  pivot_longer(c("HMO", "Other dwelling"),
-               names_to = "my_cat_sum",
-               values_to = "count") %>% 
-  group_by(IncGeo_WardCode) %>% 
-  mutate(pc_fires = count / sum(count)) %>% 
-  ungroup() %>%
-  rename(ward = IncGeo_WardCode,
-         borough = IncGeo_BoroughCode) %>% 
-  filter(my_cat_sum != "Other dwelling") %>% 
-  left_join(hmo %>% 
-              mutate(hmo_sum = ifelse(hmo == "Does not apply", "Not HMO", "HMO")) %>% 
-              group_by(la_code, hmo_sum) %>% 
-              summarise(pc_dwellings = sum(pc)) %>% 
-              filter(hmo_sum != "Not HMO") %>% 
-              rename(borough = la_code)) %>% 
-  left_join(w22_shape %>% 
-              select(WD22CD, geometry) %>% 
-              rename(ward = WD22CD)) %>% 
-  st_as_sf() %>% 
-  st_transform(crs = 4326)
+# 
+# 
+# 
+# 
+# fires_hmo <- fires %>% 
+#   select(CalYear, IncGeo_BoroughCode, IncGeo_WardCode, my_cat_sum) %>% 
+#   mutate(count = 1) %>% 
+#   filter(CalYear %in% c(2020:2022)) %>% 
+#   group_by(IncGeo_BoroughCode, IncGeo_WardCode, my_cat_sum) %>% 
+#   summarise(count = sum(count)) %>% 
+#   ungroup() %>% 
+#   pivot_wider(names_from = my_cat_sum,
+#               values_from = count,
+#               values_fill = 0) %>% 
+#   pivot_longer(c("HMO", "Other dwelling"),
+#                names_to = "my_cat_sum",
+#                values_to = "count") %>% 
+#   group_by(IncGeo_WardCode) %>% 
+#   mutate(pc_fires = count / sum(count)) %>% 
+#   ungroup() %>%
+#   rename(ward = IncGeo_WardCode,
+#          borough = IncGeo_BoroughCode) %>% 
+#   filter(my_cat_sum != "Other dwelling") %>% 
+#   left_join(hmo %>% 
+#               mutate(hmo_sum = ifelse(hmo == "Does not apply", "Not HMO", "HMO")) %>% 
+#               group_by(la_code, hmo_sum) %>% 
+#               summarise(pc_dwellings = sum(pc)) %>% 
+#               filter(hmo_sum != "Not HMO") %>% 
+#               rename(borough = la_code)) %>% 
+#   left_join(w22_shape %>% 
+#               select(WD22CD, geometry) %>% 
+#               rename(ward = WD22CD)) %>% 
+#   st_as_sf() %>% 
+#   st_transform(crs = 4326)
