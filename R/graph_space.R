@@ -1,5 +1,145 @@
-fires_hmo %>% 
-  ggplot(aes(fill=pc_fires)) +
+library(viridis)
+
+plot_hmofires_space <- fires %>% 
+  mutate(count = 1) %>% 
+  group_by(borough, ward, hmo_yn) %>% 
+  summarise(count = sum(count)) %>% 
+  ungroup() %>% 
+  pivot_wider(names_from = hmo_yn,
+              values_from = count,
+              values_fill = 0) %>% 
+  pivot_longer(c("HMO", "Other dwelling"),
+               names_to = "hmo_yn",
+               values_to = "count") %>% 
+  group_by(ward) %>% 
+  mutate(pc = count / sum(count)) %>% 
+  filter(hmo_yn != "Other dwelling") %>% 
+  filter(count > 0) %>% 
+  left_join(w22_shape %>% 
+              select(WD22CD, geometry) %>% 
+              rename(ward = WD22CD)) %>% 
+  st_as_sf() %>% 
+  st_transform(crs = 4326) %>% 
+  # st_crop(ont, xmin=-1, xmax=1, ymin=51, ymax=52) %>% 
+  ggplot() +
+  geom_sf(data = fires %>% 
+            distinct(ward) %>% 
+            mutate(count = 1) %>% 
+            left_join(w22_shape %>% 
+                        select(WD22CD, geometry) %>%
+                        rename(ward = WD22CD)) %>% 
+            st_as_sf() %>%
+            st_transform(crs = 4326), aes(), colour="white", fill = "black") +
+  geom_sf(aes(fill=count), colour="white") +
+  scale_fill_viridis(option = "turbo",
+                     begin = 0,
+                     end = 1) +
+  theme(# strip.text = element_blank(),
+    # plot.margin = unit(c(1,9,0.7,0.8), "lines"),
+    plot.background = element_rect(fill = "white"),
+    panel.background = element_blank(),
+    axis.line.x.bottom = element_line(colour = "black"),
+    axis.line.y.left = element_line(colour = "black"),
+    # panel.grid.major.x = element_line(color = "darkgrey", linewidth = 0.4),
+    # panel.grid.major.y = element_line(color = "darkgrey", linewidth = 0.4),
+    # panel.grid.minor.x = element_line(color = "darkgrey", linewidth = 0.1),
+    # panel.grid.minor.y = element_line(color = "darkgrey", linewidth = 0.1),
+    legend.title = element_blank(),
+    legend.position = c(.9, 0.17)) +
+  labs(title = "Total number of HMO fires in each London ward between 2009 and 2014", 
+       subtitle = "Wards with no recorded HMO fires are filled black") 
+
+plot_hmofires_space
+# ggsave(filename = "plots/plot_hmofires_space.png", plot_hmofires_space) 
+
+
+
+plot_fires_space <- fires %>% 
+  mutate(count = 1) %>% 
+  group_by(ward) %>% 
+  summarise(count = sum(count)) %>% 
+  ungroup() %>% 
+  filter(count > 0) %>% 
+  left_join(w22_shape %>% 
+              select(WD22CD, geometry) %>% 
+              rename(ward = WD22CD)) %>% 
+  st_as_sf() %>% 
+  st_transform(crs = 4326) %>% 
+  # st_crop(ont, xmin=-1, xmax=1, ymin=51, ymax=52) %>% 
+  ggplot() +
+  geom_sf(data = fires %>% 
+            distinct(ward) %>% 
+            mutate(count = 1) %>% 
+            left_join(w22_shape %>% 
+                        select(WD22CD, geometry) %>%
+                        rename(ward = WD22CD)) %>% 
+            st_as_sf() %>%
+            st_transform(crs = 4326), aes(), colour="white", fill = "black") +
+  geom_sf(aes(fill=count), colour="white") +
+  scale_fill_viridis(option = "turbo",
+                     begin = 0,
+                     end = 1) +
+  theme(# strip.text = element_blank(),
+    # plot.margin = unit(c(1,9,0.7,0.8), "lines"),
+    plot.background = element_rect(fill = "white"),
+    panel.background = element_blank(),
+    axis.line.x.bottom = element_line(colour = "black"),
+    axis.line.y.left = element_line(colour = "black"),
+    # panel.grid.major.x = element_line(color = "darkgrey", linewidth = 0.4),
+    # panel.grid.major.y = element_line(color = "darkgrey", linewidth = 0.4),
+    # panel.grid.minor.x = element_line(color = "darkgrey", linewidth = 0.1),
+    # panel.grid.minor.y = element_line(color = "darkgrey", linewidth = 0.1),
+    legend.title = element_blank(),
+    legend.position = c(.9, 0.17)) +
+  labs(title = "Total number of dwelling fires in each London ward between 2009 and 2014", 
+       subtitle = "There are no dwelling fires recorded for wards in the City of London - they are filled black") 
+
+plot_fires_space
+ggsave(filename = "plots/plot_fires_space.png", plot_fires_space) 
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+yearly <- fires %>% 
+  select(CalYear, IncGeo_WardCode, my_cat) %>% 
+  filter(my_cat != "Other dwelling") %>% 
+  mutate(count = 1) %>% 
+  filter(my_cat %in% c("HMO - unlicensed", "HMO - unknown")) %>% 
+  group_by(IncGeo_WardCode) %>% 
+  summarise(count = sum(count)) %>% 
+  ungroup() %>% 
+  rename(ward = IncGeo_WardCode) %>% 
+  # filter(
+  #   # IncGeo_BoroughName %in% borough_list,
+  #   pc < 0.3)  %>% 
+  left_join(w22_shape %>% 
+              select(WD22CD, geometry) %>% 
+              rename(ward = WD22CD)) %>% 
+  st_as_sf() %>% 
+  st_transform(crs = 4326) %>% 
+  # st_crop(ont, xmin=-1, xmax=1, ymin=51, ymax=52) %>% 
+  ggplot() +
+  geom_sf(data = fires %>% 
+            distinct(IncGeo_WardCode) %>% 
+            rename(ward = IncGeo_WardCode) %>% 
+            mutate(count = 1) %>% 
+            left_join(w22_shape %>% 
+                        select(WD22CD, geometry) %>%
+                        rename(ward = WD22CD)) %>% 
+            st_as_sf() %>%
+            st_transform(crs = 4326), aes(), colour="white", fill = "grey") +
+  geom_sf(aes(fill=count), colour="white") +
+  scale_fill_viridis(option = "magma",
+                     begin = 0.2,
+                     end = 0.8)
+
+
+
+
+fires_shape %>% 
+  ggplot(aes(fill=count)) +
   geom_sf(colour="white") +
   scale_fill_viridis(option = "magma")
 
@@ -195,42 +335,42 @@ yearly <- fires %>%
 
 
 
-
-yearly <- fires %>% 
-  select(CalYear, IncGeo_WardCode, IncGeo_BoroughName, FirstPumpArriving_AttendanceTime, my_cat_sum) %>% 
-  # mutate(count = 1
-  #        # ,
-  #        # IncGeo_WardName = toupper(IncGeo_WardName)
-  # ) %>% 
-  filter(FirstPumpArriving_AttendanceTime != "NULL")  %>% 
-  group_by(IncGeo_WardCode, my_cat_sum) %>% 
-  summarise(count = mean(as.numeric(FirstPumpArriving_AttendanceTime), na.rm = T)) %>% 
-  ungroup() %>% 
-  pivot_wider(names_from = my_cat_sum,
-              values_from = count,
-              values_fill = 0) %>% 
-  pivot_longer(c("HMO", "Other dwelling"),
-               names_to = "my_cat_sum",
-               values_to = "count") %>% 
-  rename(ward = IncGeo_WardCode) %>% 
-  filter(my_cat_sum != "Other dwelling") %>% 
-  # filter(
-  # IncGeo_BoroughName %in% borough_list,
-  #   pc < 0.3)  %>% 
-  left_join(w22_shape %>% 
-              select(WD22CD, geometry) %>% 
-              rename(ward = WD22CD)) %>% 
-  st_as_sf() %>% 
-  st_transform(crs = 4326) %>% 
-  # st_crop(ont, xmin=-1, xmax=1, ymin=51, ymax=52) %>% 
-  ggplot(aes(fill=count)) +
-  geom_sf(colour="white") +
-  scale_fill_viridis(option = "mako",
-                     begin = 0.1,
-                     end = 0.9)
-
-
-yearly
+# 
+# yearly <- fires %>% 
+#   select(CalYear, IncGeo_WardCode, IncGeo_BoroughName, FirstPumpArriving_AttendanceTime, my_cat_sum) %>% 
+#   # mutate(count = 1
+#   #        # ,
+#   #        # IncGeo_WardName = toupper(IncGeo_WardName)
+#   # ) %>% 
+#   filter(FirstPumpArriving_AttendanceTime != "NULL")  %>% 
+#   group_by(IncGeo_WardCode, my_cat_sum) %>% 
+#   summarise(count = mean(as.numeric(FirstPumpArriving_AttendanceTime), na.rm = T)) %>% 
+#   ungroup() %>% 
+#   pivot_wider(names_from = my_cat_sum,
+#               values_from = count,
+#               values_fill = 0) %>% 
+#   pivot_longer(c("HMO", "Other dwelling"),
+#                names_to = "my_cat_sum",
+#                values_to = "count") %>% 
+#   rename(ward = IncGeo_WardCode) %>% 
+#   filter(my_cat_sum != "Other dwelling") %>% 
+#   # filter(
+#   # IncGeo_BoroughName %in% borough_list,
+#   #   pc < 0.3)  %>% 
+#   left_join(w22_shape %>% 
+#               select(WD22CD, geometry) %>% 
+#               rename(ward = WD22CD)) %>% 
+#   st_as_sf() %>% 
+#   st_transform(crs = 4326) %>% 
+#   # st_crop(ont, xmin=-1, xmax=1, ymin=51, ymax=52) %>% 
+#   ggplot(aes(fill=count)) +
+#   geom_sf(colour="white") +
+#   scale_fill_viridis(option = "mako",
+#                      begin = 0.1,
+#                      end = 0.9)
+# 
+# 
+# yearly
 
 yearly <- fires %>% 
   select(CalYear, IncGeo_WardCode, my_cat) %>% 
