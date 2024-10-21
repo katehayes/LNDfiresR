@@ -1,6 +1,7 @@
 library(viridis)
-library(cowplot)
+# library(cowplot)
 library(tidyverse)
+library(ggrepel)
 
 plot_hmofires_space <- fires %>% 
   mutate(count = 1) %>% 
@@ -217,23 +218,28 @@ plot_fires_space <- fires %>%
 plot_fires_space
 ggsave(filename = "plots/plot_fires_space.png", plot_fires_space) 
 
-
+check <- hmo %>% 
+  distinct(la)
 
 plot_hmos_space <- hmo %>% 
   mutate(hmo_yn = ifelse(hmo_size == "Does not apply", "Other dwelling", "HMO")) %>% 
-  group_by(la, hmo_yn) %>% 
+  group_by(la_code, la, hmo_yn) %>% 
   summarise(count = sum(count)) %>% 
   ungroup() %>% 
   group_by(la) %>% 
   mutate(pc = count / sum(count)) %>% 
   filter(hmo_yn != "Other dwelling") %>% 
   left_join(la21_shape %>% 
-              select(LAD21CD, geometry) %>% 
-              rename(la = LAD21CD)) %>% 
+              select(LAD21CD, LONG, LAT, geometry) %>% 
+              rename(la_code = LAD21CD,
+                     lng = LONG,
+                     lat = LAT)) %>% 
   st_as_sf() %>% 
   st_transform(crs = 4326) %>% 
   ggplot() +
   geom_sf(aes(fill=pc), colour="white") +
+  # geom_sf_text(aes(label = la)) +
+
   scale_fill_viridis(option = "turbo",
                      begin = 0,
                      end = 1) +
@@ -250,18 +256,43 @@ plot_hmos_space <- hmo %>%
     legend.title = element_blank(),
     legend.position = c(.9, 0.2)) +
   labs(title = "% of households living in HMOs in each London borough in 2021", 
-       subtitle = "") 
+       subtitle = "")
 
 plot_hmos_space
 ggsave(filename = "plots/plot_hmos_space.png", plot_hmos_space) 
 
 
-check <- plot_grid(plot_hmos_space, plot_pc_hmofires_space, nrow = 1, align = "h")
-check
+# TO-DO: function - for each borough, take name, centre point, make line and label
+# geom_segment(aes(x = as.Date("2023-06-01"), y = 0.022,
+#                  xend = as.Date("2026-02-01"), yend = 0.022),
+#              color = "#0054FFFF",
+#              linewidth = 0.3) +
+#   geom_point(aes(x = as.Date("2023-06-01"), y = 0.022),
+#              color = "#0054FFFF",
+#              size = 0.6) +
+#   annotate(geom="text", x = as.Date("2026-02-01"), y = 0.0223, 
+#            label = "Licensed",
+#            color="black", size = 3.5,
+#            hjust = 1, vjust = 0) + # 0 is left/top aligned, 0.5 centered, 1 right/bottom
+
+
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-# 
+# check <- plot_grid(plot_hmos_space, plot_pc_hmofires_space, nrow = 1, align = "h")
+# check
+
+# geom_text_repel(aes(x = lng, y = lat, label = la),
+  # nudge_x = c(0.1,0,0,0,0,0,0,0,0,0,0,0,
+  #             0,0,0,0,0,0,0,0,0,0,0,0,
+  #             0,0,0,0,0,0,0,0,0), 
+  # nudge_y = c(0.1,0,0,0,0,0,0,0,0,0,0,0,
+  #             0,0,0,0,0,0,0,0,0,0,0,0,
+  #             0,0,0,0,0,0,0,0,0)) +  
+
+
+
 # yearly <- fires %>% 
 #   select(CalYear, IncGeo_WardCode, my_cat) %>% 
 #   filter(my_cat != "Other dwelling") %>% 
